@@ -1,4 +1,3 @@
-const { writeFile, unlink } = require('fs');
 const path = require('path');
 const {
   access,
@@ -9,6 +8,7 @@ const {
   readFile,
   appendFile,
   copyFile,
+  truncate,
 } = require('fs').promises;
 
 const newDirPath = path.resolve('06-build-page', 'project-dist');
@@ -27,7 +27,6 @@ createDir(newDirPath);
 copyAssets(newAssetsPath, oldAssetsPath);
 copyStyle(newStylePath, oldStylePath);
 copyIndex(newIndexPath, oldIndexPath);
-// replaceComponents(newDirPath);
 
 async function createDir(dirPath) {
   try {
@@ -67,7 +66,6 @@ async function copyIndex(newDirPath, oldDirPath) {
     await appendFile(newDirPath, html);
 
     replaceComponents(newDirPath);
-    // console.log(n);
 
     console.log('Html was added!');
   } catch {
@@ -115,28 +113,17 @@ async function copyAssets(newDirPath, oldDirPath) {
 async function replaceComponents(filePath) {
   try {
     const indexContent = await readFile(filePath, 'utf-8');
-    // console.log(indexContent);
     let tempContent = indexContent;
     const tempWords = tempContent.match(REGEXP);
-    console.log(tempWords);
 
     tempWords.forEach(async (word) => {
-      // console.log(word);
       const compName = word.match(/\{\{(\w+)\}\}/)[1];
-      // console.log(compName);
       const compPath = path.resolve(componentsPath, compName + '.html');
-      // console.log(compPath);
       const compContent = await readFile(compPath, 'utf-8');
-      // console.log(compContent);
       tempContent = tempContent.replace(word, compContent);
-      console.log(tempContent);
-      // await unlink(filePath);
-      // await appendFile(filePath, tempContent);
+      await truncate(filePath);
+      await appendFile(filePath, tempContent);
     });
-
-    // console.log(filePath);
-    // return await writeFile(filePath, tempContent, 'utf-8');
-    // return tempContent;
   } catch {
     console.log('Components was not replaced');
   }
