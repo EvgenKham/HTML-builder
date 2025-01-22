@@ -1,11 +1,11 @@
 const path = require('path');
-const { readdir, unlink, readFile, appendFile } = require('fs');
+const { readdir, rm, readFile, appendFile } = require('fs');
 
 const stylesDiPath = path.resolve('05-merge-styles', 'styles');
 const bundlePath = path.resolve('05-merge-styles/project-dist', 'bundle.css');
 
 (function () {
-  unlink(bundlePath, (err) => {
+  rm(bundlePath, { recursive: true, force: true }, (err) => {
     if (err) console.log(err);
     console.log('File deleted successfully!');
   });
