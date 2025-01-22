@@ -1,15 +1,6 @@
 const path = require('path');
-const {
-  access,
-  constants,
-  mkdir,
-  rm,
-  readdir,
-  readFile,
-  appendFile,
-  copyFile,
-  truncate,
-} = require('fs').promises;
+const { mkdir, rm, readdir, readFile, appendFile, copyFile, truncate } =
+  require('fs').promises;
 
 const newDirPath = path.resolve('06-build-page', 'project-dist');
 const newIndexPath = path.resolve(newDirPath, 'index.html');
@@ -30,7 +21,6 @@ copyIndex(newIndexPath, oldIndexPath);
 
 async function createDir(dirPath) {
   try {
-    // await assert(dirPath, constants.F_OK);
     // await rm(dirPath, { recursive: true });
     await mkdir(dirPath, { recursive: true });
   } catch {
@@ -42,6 +32,7 @@ async function createDir(dirPath) {
 async function copyStyle(newDirPath, oldDirPath) {
   try {
     const styleFiles = await readdir(oldDirPath);
+    await rm(newDirPath, { recursive: true, force: true });
 
     styleFiles.forEach(async (file) => {
       const filePath = path.resolve(oldDirPath, file);
@@ -61,6 +52,7 @@ async function copyStyle(newDirPath, oldDirPath) {
 async function copyIndex(newDirPath, oldDirPath) {
   try {
     const filePath = path.resolve(oldDirPath, 'template.html');
+    await rm(newDirPath, { recursive: true, force: true });
 
     const html = await readFile(filePath);
     await appendFile(newDirPath, html);
