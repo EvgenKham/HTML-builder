@@ -8,7 +8,7 @@ const newDirPath = path.resolve('04-copy-directory', 'files-copy');
 filesCopy(oldDirPath, newDirPath);
 
 async function filesCopy(oldDirPath, newDirPath) {
-  await rm(newDirPath, { recursive: true });
+  await rm(newDirPath, { recursive: true, force: true });
   await mkdir(newDirPath, { recursive: true });
 
   readdir(oldDirPath, (err, files) => {
