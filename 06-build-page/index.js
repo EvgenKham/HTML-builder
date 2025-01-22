@@ -1,6 +1,14 @@
 const path = require('path');
-const { mkdir, rm, readdir, readFile, appendFile, copyFile, truncate } =
-  require('fs').promises;
+const {
+  mkdir,
+  rm,
+  readdir,
+  readFile,
+  writeFile,
+  appendFile,
+  copyFile,
+  truncate,
+} = require('fs').promises;
 
 const newDirPath = path.resolve('06-build-page', 'project-dist');
 const newIndexPath = path.resolve(newDirPath, 'index.html');
@@ -114,7 +122,7 @@ async function replaceComponents(filePath) {
       const compContent = await readFile(compPath, 'utf-8');
       tempContent = tempContent.replace(word, compContent);
       await truncate(filePath);
-      await appendFile(filePath, tempContent);
+      await writeFile(filePath, tempContent);
     });
   } catch {
     console.log('Components was not replaced');
