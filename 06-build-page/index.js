@@ -101,7 +101,12 @@ async function copyAssets(newDirPath, oldDirPath) {
       if (isDir !== '') {
         const newFilePath = path.resolve(newDirPath, file);
         createDir(newDirPath);
-        await copyFile(filePath, newFilePath);
+        await copyFile(filePath, newFilePath)
+          .then(() => {})
+          .catch((err) => {
+            createDir(newDirPath);
+            console.log(err);
+          });
       }
     });
     console.log('Assets was copied!');
